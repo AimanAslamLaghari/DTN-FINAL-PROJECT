@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Team - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <div style="margin-bottom: 1.5rem;">
+            <span style="color: var(--accent); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">ADMINISTRATION</span>
+            <h3 style="font-size: 1.3rem; color: #fff;">LuxeCraft Portal</h3>
+        </div>
+        <nav class="admin-nav">
+            <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item">📊 Dashboard Overview</a>
+            <a href="{{ url_for('admin_services') }}" class="admin-nav-item">🛠️ Manage Services</a>
+            <a href="{{ url_for('admin_gallery') }}" class="admin-nav-item">🖼️ Manage Gallery</a>
+            <a href="{{ url_for('admin_team') }}" class="admin-nav-item active">👥 Manage Team</a>
+            <a href="{{ url_for('admin_inquiries') }}" class="admin-nav-item">📬 Client Inquiries</a>
+            <a href="{{ url_for('admin_logout') }}" class="admin-nav-item" style="color: var(--danger); margin-top: 2rem;">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-header">
+            <div>
+                <h2>Studio Team CRUD Management</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">Manage architect profiles, designer bios, and headshot image uploads.</p>
+            </div>
+            <button onclick="openModal('addTeamModal')" class="btn btn-primary">➕ Add Team Member</button>
+        </div>
+
+        <div class="grid-3">
+            {% for member in team %}
+            <div class="team-card">
+                <img src="{{ member.image_url }}" alt="{{ member.name }}" class="team-avatar" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80';">
+                <h3>{{ member.name }}</h3>
+                <div class="role">{{ member.role }}</div>
+                <p>{{ member.bio }}</p>
+                <div style="margin: 1rem 0; font-size: 0.82rem; color: var(--text-muted);">
+                    <div>✉️ {{ member.email }}</div>
+                    <div>📞 {{ member.phone or 'N/A' }}</div>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                    <button onclick="openModal('editTeamModal{{ member.id }}')" class="btn btn-outline btn-sm">✏️ Edit</button>
+                    <form action="{{ url_for('admin_team_delete', member_id=member.id) }}" method="POST" onsubmit="return confirm('Remove team member profile?')">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Remove</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Modal for Member #{{ member.id }} -->
+            <div id="editTeamModal{{ member.id }}" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 1.5rem;">
+                <div class="card" style="width: 100%; max-width: 520px; padding: 2rem; text-align: left;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h3>Edit Profile: {{ member.name }}</h3>
+                        <button onclick="closeModal('editTeamModal{{ member.id }}')" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+                    </div>
+
+                    <form action="{{ url_for('admin_team_edit', member_id=member.id) }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="name" class="form-control" value="{{ member.name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Role / Title *</label>
+                            <input type="text" name="role" class="form-control" value="{{ member.role }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Biography</label>
+                            <textarea name="bio" class="form-control" required>{{ member.bio }}</textarea>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ member.email }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control" value="{{ member.phone }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Update Headshot Image Upload</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Display Order Sequence</label>
+                            <input type="number" name="display_order" class="form-control" value="{{ member.display_order }}">
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                            <button type="button" onclick="closeModal('editTeamModal{{ member.id }}')" class="btn btn-outline">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div style="grid-column: span 3; text-align: center; padding: 3rem;" class="card">
+                <p style="color: var(--text-secondary);">No team members found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+
+<!-- Modal: Add Team Member -->
+<div id="addTeamModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="card" style="width: 100%; max-width: 520px; padding: 2rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+            <h3>➕ Add Team Member</h3>
+            <button onclick="closeModal('addTeamModal')" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+        </div>
+
+        <form action="{{ url_for('admin_team_add') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="name" class="form-control" placeholder="e.g. Eleanor Vance" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Role / Design Title *</label>
+                <input type="text" name="role" class="form-control" placeholder="e.g. Senior Architectural Director" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Professional Bio *</label>
+                <textarea name="bio" class="form-control" placeholder="Brief professional background..." required></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="name@luxecraft.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="text" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Upload Profile Headshot Image *</label>
+                <input type="file" name="image" class="form-control" accept="image/*" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Display Order</label>
+                <input type="number" name="display_order" class="form-control" value="1">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <button type="button" onclick="closeModal('addTeamModal')" class="btn btn-outline">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Member</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
