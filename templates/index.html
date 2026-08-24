@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}LuxeCraft Interior Studio - Luxury Spatial Design{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="tag">Bespoke Architectural & Spatial Design</span>
+            <h1>Transform Your Space Into A <span class="text-gradient">Masterpiece</span></h1>
+            <p>
+                LuxeCraft Interior Studio creates extraordinary residential villas, modern corporate offices, and architectural blueprints tailored for sophisticated living.
+            </p>
+            <div class="hero-btns">
+                <a href="{{ url_for('services') }}" class="btn btn-primary">Explore Services</a>
+                <a href="{{ url_for('contact') }}" class="btn btn-outline">Schedule Consultation</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>{{ stats.projects_completed }}+</h3>
+                    <p>Projects Delivered</p>
+                </div>
+                <div class="stat-item">
+                    <h3>{{ stats.happy_clients }}+</h3>
+                    <p>Satisfied Clients</p>
+                </div>
+                <div class="stat-item">
+                    <h3>{{ stats.design_awards }}</h3>
+                    <p>Design Excellence Awards</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <img src="{{ url_for('static', filename='uploads/gallery1.jpg') }}" alt="Emerald Penthouse Interior">
+            <div class="hero-card-badge">
+                <h4 style="color: #fff; font-size: 1.1rem; margin-bottom: 0.2rem;">Featured Showcase</h4>
+                <p style="color: var(--text-secondary); font-size: 0.88rem;">The Emerald Penthouse Suite • Downtown Skyline</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="tag">Our Expertise</span>
+            <h2>Tailored Interior Services</h2>
+            <p>From conceptual 3D renderings to full-scale architectural executions, we craft environments that inspire.</p>
+        </div>
+
+        <div class="grid-3">
+            {% for service in featured_services %}
+            <div class="card">
+                <div class="card-img-wrapper">
+                    <img src="{{ service.image_url }}" alt="{{ service.title }}">
+                    <span class="card-badge">{{ service.category_name or 'Featured' }}</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ service.title }}</h3>
+                    <p class="card-text">{{ service.short_desc }}</p>
+                    <div class="card-footer">
+                        <div>
+                            <span class="price-tag">${{ "%.2f"|format(service.price) }}</span>
+                            <span class="price-unit">/ {{ service.price_unit }}</span>
+                        </div>
+                        <a href="{{ url_for('services') }}" class="btn btn-outline btn-sm">Details →</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{{ url_for('services') }}" class="btn btn-accent">View All Design Services →</a>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Portfolio Showcase -->
+<section class="section" style="background: var(--bg-surface); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <div class="section-header">
+            <span class="tag">Portfolio</span>
+            <h2>Recent Architectural Works</h2>
+            <p>Explore curated spaces completed by our award-winning interior designers.</p>
+        </div>
+
+        <div class="gallery-grid">
+            {% for item in gallery_items %}
+            <div class="gallery-item">
+                <img src="{{ item.image_url }}" alt="{{ item.title }}">
+                <div class="gallery-overlay">
+                    <span style="color: var(--accent); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">{{ item.category_name or 'Portfolio' }}</span>
+                    <h3 style="color: #fff; font-size: 1.25rem;">{{ item.title }}</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">📍 {{ item.location }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="tag">Client Reviews</span>
+            <h2>What Our Clients Say</h2>
+            <p>Read real experiences from villa owners, corporate executives, and developers.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card" style="padding: 2rem;">
+                <div style="color: var(--accent); margin-bottom: 1rem;">★★★★★</div>
+                <p style="color: var(--text-secondary); font-style: italic; margin-bottom: 1.5rem;">
+                    "LuxeCraft turned our bare penthouse into a luxury masterpiece. Their attention to detail, acoustic planning, and custom lighting created an unparalleled living experience."
+                </p>
+                <h4 style="font-size: 1.05rem;">Arthur Pendelton</h4>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">Penthouse Owner, Downtown</span>
+            </div>
+
+            <div class="card" style="padding: 2rem;">
+                <div style="color: var(--accent); margin-bottom: 1rem;">★★★★★</div>
+                <p style="color: var(--text-secondary); font-style: italic; margin-bottom: 1.5rem;">
+                    "The corporate redesign of our tech office boosted employee collaboration by 40%. The glass partitions and acoustic pods were executed flawlessly on schedule."
+                </p>
+                <h4 style="font-size: 1.05rem;">Elena Rostova</h4>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">COO, Horizon Tech Labs</span>
+            </div>
+
+            <div class="card" style="padding: 2rem;">
+                <div style="color: var(--accent); margin-bottom: 1rem;">★★★★★</div>
+                <p style="color: var(--text-secondary); font-style: italic; margin-bottom: 1.5rem;">
+                    "Their 3D walkthrough renderings saved us thousands of dollars in construction adjustments before ground break. Truly world-class professional designers."
+                </p>
+                <h4 style="font-size: 1.05rem;">Jonathan Vance</h4>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">Real Estate Developer</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call To Action Banner -->
+<section class="container" style="margin-bottom: 4rem;">
+    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(245, 158, 11, 0.2)); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 4rem 2rem; text-align: center;">
+        <h2 style="font-size: 2.4rem; margin-bottom: 1rem;">Ready to Redefine Your Interior Living Space?</h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 650px; margin: 0 auto 2rem auto;">
+            Book an initial site audit or schedule a 1-on-1 consultation with our senior architectural lead.
+        </p>
+        <a href="{{ url_for('contact') }}" class="btn btn-accent btn-lg">Book Free Design Consultation</a>
+    </div>
+</section>
+{% endblock %}

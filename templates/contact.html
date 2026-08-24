@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - LuxeCraft Interior Studio{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 4rem 0 3rem 0;">
+    <div class="container text-center" style="text-align: center; max-width: 800px;">
+        <span class="tag">Get In Touch</span>
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">Let's Discuss Your <span class="text-gradient">Spatial Vision</span></h1>
+        <p style="color: var(--text-secondary); font-size: 1.15rem;">
+            Have a residential villa, commercial floor, or custom blueprint project in mind? Complete the inquiry form below for a rapid response.
+        </p>
+    </div>
+</section>
+
+<section class="section" style="padding-top: 1rem;">
+    <div class="container contact-grid">
+        
+        <!-- Contact Info Card -->
+        <div class="contact-info-card">
+            <h3 style="font-size: 1.6rem; margin-bottom: 1.5rem;">Studio Headquarters</h3>
+            
+            <div class="contact-item">
+                <div class="contact-icon">📍</div>
+                <div>
+                    <h4 style="font-size: 1rem; color: #fff;">Address</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.92rem;">742 Luxe Boulevard, Suite 400<br>Design District, CA 90210</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">📞</div>
+                <div>
+                    <h4 style="font-size: 1rem; color: #fff;">Direct Phone</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.92rem;">+1 (555) 234-5678 / +1 (555) 987-6543</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div>
+                    <h4 style="font-size: 1rem; color: #fff;">Email Consultations</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.92rem;">inquiries@luxecraft.com / info@luxecraft.com</p>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">🕒</div>
+                <div>
+                    <h4 style="font-size: 1rem; color: #fff;">Operating Hours</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.92rem;">Monday – Friday: 9:00 AM – 6:00 PM PST<br>Saturday: 10:00 AM – 3:00 PM (By Appointment)</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <span style="color: var(--accent); font-weight: 700; font-size: 0.9rem;">⭐ Fast Audit Promise:</span>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.3rem;">All site audit inquiries receive an initial response within 24 hours.</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="card" style="padding: 2.5rem;">
+            <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Send Us A Message</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">Please fill out your project details below.</p>
+
+            <form action="{{ url_for('contact') }}" method="POST" id="inquiryForm">
+                <div class="form-group">
+                    <label class="form-label" for="client_name">Full Name <span style="color: var(--danger)">*</span></label>
+                    <input type="text" id="client_name" name="client_name" class="form-control" placeholder="e.g. Eleanor Vance" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address <span style="color: var(--danger)">*</span></label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="service_id">Interested Service Package</label>
+                    <select id="service_id" name="service_id" class="form-control">
+                        <option value="">-- General Spatial Inquiry --</option>
+                        {% for s in services %}
+                        <option value="{{ s.id }}">{{ s.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" class="form-control" placeholder="e.g. Villa Interior Renovation Site Audit">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="message">Project Description & Requirements <span style="color: var(--danger)">*</span></label>
+                    <textarea id="message" name="message" class="form-control" placeholder="Share details about your space, dimensions, timeline, or design preferences..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">
+                    Submit Project Inquiry →
+                </button>
+            </form>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
