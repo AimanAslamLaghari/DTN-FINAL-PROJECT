@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - LuxeCraft Studio{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+        <div style="margin-bottom: 1.5rem;">
+            <span style="color: var(--accent); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">ADMINISTRATION</span>
+            <h3 style="font-size: 1.3rem; color: #fff;">LuxeCraft Portal</h3>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item active">📊 Dashboard Overview</a>
+            <a href="{{ url_for('admin_services') }}" class="admin-nav-item">🛠️ Manage Services</a>
+            <a href="{{ url_for('admin_gallery') }}" class="admin-nav-item">🖼️ Manage Gallery</a>
+            <a href="{{ url_for('admin_team') }}" class="admin-nav-item">👥 Manage Team</a>
+            <a href="{{ url_for('admin_inquiries') }}" class="admin-nav-item">📬 Client Inquiries</a>
+            <a href="{{ url_for('admin_logout') }}" class="admin-nav-item" style="color: var(--danger); margin-top: 2rem;">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- Main Dashboard Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <div>
+                <h2>Dashboard Overview</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">Welcome back, <strong>{{ session.username }}</strong>!</p>
+            </div>
+            <a href="{{ url_for('home') }}" target="_blank" class="btn btn-outline btn-sm">🌐 View Live Website</a>
+        </div>
+
+        <!-- Metrics Counters -->
+        <div class="admin-stats-grid">
+            <div class="stat-box">
+                <div>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Active Services</span>
+                    <div class="num" style="color: var(--primary)">{{ services_count }}</div>
+                </div>
+                <div style="font-size: 1.8rem;">🛠️</div>
+            </div>
+
+            <div class="stat-box">
+                <div>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Gallery Showcase</span>
+                    <div class="num" style="color: var(--accent)">{{ gallery_count }}</div>
+                </div>
+                <div style="font-size: 1.8rem;">🖼️</div>
+            </div>
+
+            <div class="stat-box">
+                <div>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Team Members</span>
+                    <div class="num" style="color: var(--info)">{{ team_count }}</div>
+                </div>
+                <div style="font-size: 1.8rem;">👥</div>
+            </div>
+
+            <div class="stat-box">
+                <div>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Total Inquiries</span>
+                    <div class="num" style="color: var(--success)">{{ inquiries_count }}</div>
+                    {% if pending_inquiries > 0 %}
+                    <span class="badge badge-pending" style="margin-top: 0.3rem;">{{ pending_inquiries }} Pending</span>
+                    {% endif %}
+                </div>
+                <div style="font-size: 1.8rem;">📬</div>
+            </div>
+        </div>
+
+        <!-- Recent Inquiries Table -->
+        <div class="card" style="padding: 1.5rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;">
+                <h3 style="font-size: 1.25rem;">Recent Client Inquiries</h3>
+                <a href="{{ url_for('admin_inquiries') }}" class="btn btn-outline btn-sm">View All Inquiries →</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client Name</th>
+                            <th>Email / Phone</th>
+                            <th>Requested Package</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inq in recent_inquiries %}
+                        <tr>
+                            <td>#{{ inq.id }}</td>
+                            <td><strong>{{ inq.client_name }}</strong></td>
+                            <td>
+                                <div>{{ inq.email }}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ inq.phone or 'N/A' }}</div>
+                            </td>
+                            <td>{{ inq.service_title or 'General Inquiry' }}</td>
+                            <td>
+                                <span class="badge badge-{{ inq.status|lower|replace(' ', '') }}">
+                                    {{ inq.status }}
+                                </span>
+                            </td>
+                            <td style="font-size: 0.85rem; color: var(--text-secondary);">{{ inq.created_at }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_inquiries') }}" class="btn btn-outline btn-sm">Manage</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No inquiries submitted yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
